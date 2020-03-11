@@ -25,6 +25,7 @@ buildscript {
 plugins {
   id "com.github.ben-manes.versions" version "0.27.0"
   id "com.vanniktech.android.junit.jacoco" version "0.15.0"
+  id "de.marcphilipp.nexus-publish" version "0.4.0"
   id "digital.wup.android-maven-publish" version "3.6.3"
   id "io.codearte.nexus-staging" version "0.21.2"
   id "ru.vyarus.animalsniffer" version "1.5.0"
@@ -60,6 +61,15 @@ nexusStaging {
   username = mavenCentralUsername
   password = mavenCentralPassword
   stagingProfileId = "af061f5afba777"
+}
+
+nexusPublishing {
+  repositories {
+    sonatype {
+      username = mavenCentralUsername
+      password = mavenCentralPassword
+    }
+  }
 }
 
 allprojects {
