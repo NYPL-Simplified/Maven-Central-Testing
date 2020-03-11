@@ -13,10 +13,6 @@ buildscript {
 
   dependencies {
     classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:4.3.1"
-    classpath "com.nabilhachicha:android-native-dependencies:0.1.2"
-    classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:0.15.0"
-    classpath "digital.wup:android-maven-publish:3.6.3"
-    classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.21.2"
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath 'com.android.tools.build:gradle:3.5.3'
   }
@@ -24,7 +20,6 @@ buildscript {
 
 plugins {
   id "com.github.ben-manes.versions" version "0.27.0"
-  id "com.vanniktech.android.junit.jacoco" version "0.15.0"
   id "de.marcphilipp.nexus-publish" version "0.4.0"
   id "digital.wup.android-maven-publish" version "3.6.3"
   id "io.codearte.nexus-staging" version "0.21.2"
@@ -45,18 +40,18 @@ ext {
     logger.warn("No mavenCentralPassword property specified: Using an empty value")
     mavenCentralPassword = ""
   }
+
+  mavenCentralReleasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+  mavenCentralSnapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
 }
 
 ext.libraries = [
   kotlinStdlib: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
 ]
 
-apply plugin: "io.codearte.nexus-staging"
-apply plugin: "com.vanniktech.android.junit.jacoco"
-
 nexusStaging {
   packageGroup = "org.librarysimplified"
-  numberOfRetries = 32
+  numberOfRetries = 128
   delayBetweenRetriesInMillis = 2000
   username = mavenCentralUsername
   password = mavenCentralPassword
@@ -66,6 +61,8 @@ nexusStaging {
 nexusPublishing {
   repositories {
     sonatype {
+      nexusUrl = uri(mavenCentralReleasesRepoUrl)
+      snapshotRepositoryUrl = uri(mavenCentralSnapshotsRepoUrl)
       username = mavenCentralUsername
       password = mavenCentralPassword
     }
@@ -75,12 +72,6 @@ nexusPublishing {
 allprojects {
   group = project.ext["GROUP"]
   version = project.ext["VERSION_NAME"]
-}
-
-// Add ktlint tasks to all subprojects
-
-subprojects { project ->
-  apply from: file("$rootDir/ktlint.gradle")
 }
 
 subprojects { project ->
@@ -263,9 +254,7 @@ Automatic-Module-Name: ${POM_AUTOMATIC_MODULE_NAME}
       logger.info("using Maven Central repository for publication")
 
       maven {
-        def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-        def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-        url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+        url = version.endsWith("SNAPSHOT") ? mavenCentralSnapshotsRepoUrl : mavenCentralReleasesRepoUrl
         credentials(PasswordCredentials) {
           username mavenCentralUsername
           password mavenCentralPassword
