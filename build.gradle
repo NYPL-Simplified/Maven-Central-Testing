@@ -57,8 +57,8 @@ nexusStaging {
   packageGroup = "org.librarysimplified"
   numberOfRetries = 32
   delayBetweenRetriesInMillis = 2000
-  // username = mavenCentralUsername
-  // password = mavenCentralPassword
+  username = mavenCentralUsername
+  password = mavenCentralPassword
   stagingProfileId = "af061f5afba777"
 }
 
