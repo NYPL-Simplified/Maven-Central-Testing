@@ -1,9 +1,9 @@
 buildscript {
-  if ("$gradle.gradleVersion" != "6.2.1") {
-    throw new GradleException("Gradle version 6.2.1 is required (received $gradle.gradleVersion)")
+  if ("$gradle.gradleVersion" != "6.3") {
+    throw new GradleException("Gradle version 6.3 is required (received $gradle.gradleVersion)")
   }
 
-  ext.kotlin_version = "1.3.61"
+  ext.kotlin_version = "1.3.72"
 
   repositories {
     mavenCentral()
@@ -43,6 +43,9 @@ ext {
 
   mavenCentralReleasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
   mavenCentralSnapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+
+  temporaryArtifactRepository = "file:///tmp/testArtifact/${UUID.randomUUID()}/"
+  logger.warn("The temporary artifact repository is: ${temporaryArtifactRepository}")
 }
 
 ext.libraries = [
@@ -259,6 +262,11 @@ Automatic-Module-Name: ${POM_AUTOMATIC_MODULE_NAME}
           username mavenCentralUsername
           password mavenCentralPassword
         }
+      }
+
+      maven {
+        url = temporaryArtifactRepository
+        name = "temporaryDirectory"
       }
     }
   }
