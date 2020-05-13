@@ -44,8 +44,15 @@ ext {
   mavenCentralReleasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
   mavenCentralSnapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
 
-  temporaryArtifactRepository = "file:///tmp/testArtifact/${UUID.randomUUID()}/"
-  logger.warn("The temporary artifact repository is: ${temporaryArtifactRepository}")
+  if (project.hasProperty("org.librarysimplified.directory.publish")) {
+    useDirectoryPublishPath = project.property("org.librarysimplified.directory.publish")
+    useDirectoryPublish = true
+    logger.warn("org.librarysimplified.directory.publish is set: We will publish artifacts to ${useDirectoryPublishPath}")
+  } else {
+    logger.warn("org.librarysimplified.directory.publish is not set: We will not publish artifacts to a custom directory")
+    useDirectoryPublish = false
+    useDirectoryPublishPath = null
+  }
 }
 
 ext.libraries = [
@@ -254,19 +261,22 @@ Automatic-Module-Name: ${POM_AUTOMATIC_MODULE_NAME}
     }
 
     repositories {
-      logger.info("using Maven Central repository for publication")
+      if (useDirectoryPublish) {
+        logger.info("using ${useDirectoryPublishPath} for publication")
 
-      maven {
-        url = version.endsWith("SNAPSHOT") ? mavenCentralSnapshotsRepoUrl : mavenCentralReleasesRepoUrl
-        credentials(PasswordCredentials) {
-          username mavenCentralUsername
-          password mavenCentralPassword
+        maven {
+          name = "Directory"
+          url = "file://${useDirectoryPublishPath}"
         }
-      }
-
-      maven {
-        url = temporaryArtifactRepository
-        name = "temporaryDirectory"
+      } else {
+        logger.info("using Maven Central repository for publication")
+        maven {
+          url = version.endsWith("SNAPSHOT") ? mavenCentralSnapshotsRepoUrl : mavenCentralReleasesRepoUrl
+          credentials(PasswordCredentials) {
+            username mavenCentralUsername
+            password mavenCentralPassword
+          }
+        }
       }
     }
   }
