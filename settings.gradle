@@ -1,3 +1,4 @@
 rootProject.name = 'testing'
 
 include ':org.librarysimplified.testing.test_jar'
+include ':org.librarysimplified.testing.app'

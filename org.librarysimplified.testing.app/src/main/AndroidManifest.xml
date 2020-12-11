@@ -1,0 +1,18 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="org.librarysimplified.testing.app">
+
+  <application>
+    <activity
+      android:name="org.librarysimplified.testing.app.MainActivity"
+      android:icon="@mipmap/ic_launcher"
+      android:exported="true"
+      android:label="MavenCentralTesting"
+      android:launchMode="singleTop">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+  </application>
+
+</manifest>
