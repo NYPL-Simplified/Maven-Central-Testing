@@ -1,9 +1,9 @@
 buildscript {
-  if ("$gradle.gradleVersion" != "6.3") {
-    throw new GradleException("Gradle version 6.3 is required (received $gradle.gradleVersion)")
+  if ("$gradle.gradleVersion" != "6.7") {
+    throw new GradleException("Gradle version 6.7 is required (received $gradle.gradleVersion)")
   }
 
-  ext.kotlin_version = "1.3.72"
+  ext.kotlin_version = "1.4.20"
 
   repositories {
     mavenCentral()
@@ -40,9 +40,6 @@ ext {
     mavenCentralPassword = ""
   }
 
-  mavenCentralReleasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-  mavenCentralSnapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-
   if (project.hasProperty("org.librarysimplified.directory.publish")) {
     useDirectoryPublishPath = project.property("org.librarysimplified.directory.publish")
     useDirectoryPublish = true
@@ -51,6 +48,14 @@ ext {
     logger.warn("org.librarysimplified.directory.publish is not set: We will not publish artifacts to a custom directory")
     useDirectoryPublish = false
     useDirectoryPublishPath = null
+  }
+
+  if (project.hasProperty("org.librarysimplified.no_signing")) {
+    disableSigning = true
+    logger.warn("org.librarysimplified.no_signing is set: We will not sign artifacts")
+  } else {
+    disableSigning = false
+    logger.warn("org.librarysimplified.no_signing is not set: We will attempt to sign artifacts")
   }
 }
 
@@ -248,25 +253,26 @@ Automatic-Module-Name: ${POM_AUTOMATIC_MODULE_NAME}
           url = "file://${useDirectoryPublishPath}"
         }
       }
+
+      if (version.endsWith("-SNAPSHOT")) {
+        maven {
+          url = "https://oss.sonatype.org/content/repositories/snapshots/"
+          name = "SonatypeSnapshots"
+          credentials(PasswordCredentials) {
+            username mavenCentralUsername
+            password mavenCentralPassword
+          }
+        }
+      }
     }
   }
 
-  signing {
-    useGpgCmd()
-    sign publishing.publications.basicJar
-  }
+  if (!disableSigning) {
+    apply plugin: "signing"
 
-  tasks.withType(Sign) { task ->
-    def isSnapshot = version.endsWith("SNAPSHOT")
-
-    // Sign release versions only; not snapshots
-    onlyIf {
-      if (isSnapshot) {
-        logger.warn("$POM_NAME: '$version' is a snapshot version; artifacts will not be signed")
-      } else {
-        logger.info("$POM_NAME: '$version' is a release version; artifacts will be signed")
-      }
-      return !isSnapshot
+    signing {
+      useGpgCmd()
+      sign publishing.publications.basicJar
     }
   }
 
@@ -274,4 +280,20 @@ Automatic-Module-Name: ${POM_AUTOMATIC_MODULE_NAME}
     mavenLocal()
     mavenCentral()
   }
+}
+
+/**
+ * An empty task called by CI. We don't do semantic versioning analysis here yet.
+ */
+
+task verifySemanticVersioning {
+
+}
+
+/**
+ * An empty task called by CI. We don't do ktlint in this repository.
+ */
+
+task ktlint {
+
 }
