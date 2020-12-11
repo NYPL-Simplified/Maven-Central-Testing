@@ -297,3 +297,15 @@ task verifySemanticVersioning {
 task ktlint {
 
 }
+
+/**
+ * A couple of tasks called by CI. We don't do Android in this repository, so we only have
+ * the generic 'assemble' task.
+ */
+
+task assembleDebug(dependsOn: assemble) {
+
+}
+task assembleRelease(dependsOn: assemble) {
+
+}
