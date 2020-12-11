@@ -160,6 +160,18 @@ Automatic-Module-Name: ${POM_AUTOMATIC_MODULE_NAME}
         "Unrecognized packaging type ${POM_PACKAGING} for ${project}")
   }
 
+  /**
+   * A couple of tasks called by CI. We don't do Android in this repository, so we only have
+   * the generic 'assemble' task.
+   */
+
+  task assembleDebug(dependsOn: 'assemble') {
+
+  }
+  task assembleRelease(dependsOn: 'assemble')  {
+
+  }
+
   task javadocsJar(type: Jar) {
     classifier = "javadoc"
   }
@@ -295,17 +307,5 @@ task verifySemanticVersioning {
  */
 
 task ktlint {
-
-}
-
-/**
- * A couple of tasks called by CI. We don't do Android in this repository, so we only have
- * the generic 'assemble' task.
- */
-
-task assembleDebug(dependsOn: assemble) {
-
-}
-task assembleRelease(dependsOn: assemble) {
 
 }
