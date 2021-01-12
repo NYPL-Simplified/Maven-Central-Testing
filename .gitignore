@@ -23,4 +23,4 @@ instabug.conf
 
 # backup files
 *~
-
+node_modules

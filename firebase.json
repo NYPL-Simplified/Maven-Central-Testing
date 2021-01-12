@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1076330259269",
+    "project_id": "simplyabc-f1f0a",
+    "storage_bucket": "simplyabc-f1f0a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076330259269:android:8cb4dc8d0e14bc32d3d42c",
+        "android_client_info": {
+          "package_name": "org.librarysimplified.testing.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076330259269-gb24phie3kslpn5tr71s2jaf5sahd0sc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAn2uObmqCL5AtgAAttZfhBUS1iOVqY0YA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076330259269-gb24phie3kslpn5tr71s2jaf5sahd0sc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

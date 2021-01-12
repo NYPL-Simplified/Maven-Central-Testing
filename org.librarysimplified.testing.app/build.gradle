@@ -1,4 +1,33 @@
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+
 dependencies {
   implementation libraries.androidXConstraintLayout
   implementation libraries.kotlinStdlib
+}
+
+static Integer versionCode(String versionName) {
+  def (major, minor, patch) = versionName
+    .replaceAll('[-+].*', '') // strip all metadata from version
+    .tokenize('.')
+
+  major = major.toInteger()
+  minor = minor.toInteger()
+  patch = patch.toInteger()
+
+  // Return version code padded with leading zeros
+  return String.format('%02d%02d%02d', major, minor, patch).toInteger()
+}
+
+static String now()
+{
+  return DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(OffsetDateTime.now()).toString();
+}
+
+android {
+  defaultConfig {
+    versionName = project.version
+    versionCode = versionCode(project.version)
+    buildConfigField "String", "BUILD_DATE", "\"${now()}\""
+  }
 }
