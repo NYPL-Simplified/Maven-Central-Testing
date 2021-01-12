@@ -21,7 +21,7 @@ then
   fatal "\$_FIREBASE_TOKEN is unset"
 fi
 
-changelog write-plain > changes.txt ||
+changelog write-plain | sed 's/^Change: /* /g' > changes.txt ||
   fatal "could not write changelog"
 
 exec firebase appdistribution:distribute \
